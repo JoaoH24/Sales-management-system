@@ -447,6 +447,9 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Agregar Cliente"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonAgregarClienteActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="buttonEliminarCliente">
                   <Properties>
@@ -600,21 +603,19 @@
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="nombreProductoF" min="-2" pref="268" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="precioProductoF" max="32767" attributes="0"/>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="stockProductoSpin" min="-2" pref="76" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                          <Component id="categoriasProductosCombo" min="-2" pref="271" max="-2" attributes="0"/>
-                                      </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="precioProductoF" max="32767" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="stockProductoSpin" min="-2" pref="76" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="categoriasProductosCombo" min="-2" pref="271" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace pref="30" max="32767" attributes="0"/>
@@ -1379,7 +1380,7 @@
                                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                                       <Component id="jLabel52" min="-2" pref="32" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="buttonConfirmarSPedido" min="-2" pref="169" max="-2" attributes="0"/>
+                                      <Component id="buttonConfirmarSPedido" min="-2" pref="181" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
@@ -1402,9 +1403,9 @@
                                           </Group>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="buttonAgregarProductoPedido" min="-2" pref="169" max="-2" attributes="0"/>
                                               <Component id="productosCombo" min="-2" pref="208" max="-2" attributes="0"/>
                                               <Component id="cantidadProductoSpin" alignment="0" min="-2" pref="104" max="-2" attributes="0"/>
+                                              <Component id="buttonAgregarProductoPedido" alignment="0" min="-2" pref="181" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
