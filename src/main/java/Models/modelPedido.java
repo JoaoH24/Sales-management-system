@@ -18,17 +18,14 @@ public class modelPedido {
     public String query;
     
     /* INSERT */
-    public void crearPedido(String nombre, String descripcion, float precio, int stock, int categoria) throws SQLException {
+    public void crearPedido(int cliente, int empleado) throws SQLException {
         ConnectionSQLServer SQL = new ConnectionSQLServer();
         myConn = SQL.connectSQL();
-        query = "INSERT INTO Producto (nombre, descripcion, precio, stock, categoria_id) VALUES (?,?,?,?,?);";
+        query = "INSERT INTO Pedido (cliente_id, empleado_id, fecha_pedido, estado) VALUES (?, ?, GETDATE(), 'Pendiente');";
         
         myStamt = myConn.prepareStatement(query);
-        myStamt.setString(1, nombre);
-        myStamt.setString(2, descripcion);
-        myStamt.setFloat(3, precio);
-        myStamt.setInt(4, stock);
-        myStamt.setInt(5, categoria);
+        myStamt.setInt(1, cliente);
+        myStamt.setInt(2, empleado);
         
         int response = myStamt.executeUpdate();
         System.out.println(response + "filas afectadas");
@@ -39,7 +36,7 @@ public class modelPedido {
     public void leerPedido() throws SQLException {
         ConnectionSQLServer SQL = new ConnectionSQLServer();
         myConn = SQL.connectSQL();
-        query = "SELECT * from Producto;";
+        query = "SELECT * from Pedido;";
         
         myStamtQ = myConn.createStatement();
         
@@ -50,10 +47,17 @@ public class modelPedido {
     }
     
     /* UPDATE */
-    public void actualizarPedido() throws SQLException {
+    public void actualizarPedido(int id, String estado) throws SQLException {
         ConnectionSQLServer SQL = new ConnectionSQLServer();
         myConn = SQL.connectSQL();
-        query = "UPDATE Producto set nombre=? WHERE id=?;";
+        query = "UPDATE Pedido SET estado = ? WHERE pedido_id = ?;";
+        
+        myStamt = myConn.prepareStatement(query);
+        myStamt.setString(1, estado);
+        myStamt.setInt(2, id);
+        
+        int response = myStamt.executeUpdate();
+        System.out.println(response + "filas afectadas");
         
         myConn.close();
     }
@@ -62,7 +66,8 @@ public class modelPedido {
     public void eliminarPedido(int id) throws SQLException {
         ConnectionSQLServer SQL = new ConnectionSQLServer();
         myConn = SQL.connectSQL();
-        query = "DELETE FROM Producto WHERE producto_id = ?;";
+        query = "DELETE FROM Pedido WHERE pedido_id = ?;";
+        
         myStamt = myConn.prepareStatement(query);
         myStamt.setInt(1, id);
         

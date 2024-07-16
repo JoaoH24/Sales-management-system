@@ -18,17 +18,15 @@ public class modelDetallePedido {
     public String query;
     
     /* INSERT */
-    public void crearEmpleado(String nombre, String descripcion, float precio, int stock, int categoria) throws SQLException {
+    public void crearDetallePedido(int pedido, int producto, int cantidad) throws SQLException {
         ConnectionSQLServer SQL = new ConnectionSQLServer();
         myConn = SQL.connectSQL();
-        query = "INSERT INTO Producto (nombre, descripcion, precio, stock, categoria_id) VALUES (?,?,?,?,?);";
+        query = "INSERT INTO DetallePedido (pedido_id, producto_id, cantidad) VALUES (?, ?, ?);";
         
         myStamt = myConn.prepareStatement(query);
-        myStamt.setString(1, nombre);
-        myStamt.setString(2, descripcion);
-        myStamt.setFloat(3, precio);
-        myStamt.setInt(4, stock);
-        myStamt.setInt(5, categoria);
+        myStamt.setInt(1, pedido);
+        myStamt.setInt(2, producto);
+        myStamt.setInt(3, cantidad);
         
         int response = myStamt.executeUpdate();
         System.out.println(response + "filas afectadas");
@@ -36,10 +34,10 @@ public class modelDetallePedido {
     }
     
     /* READ */
-    public void leerEmpleado() throws SQLException {
+    public void leerDetallePedido() throws SQLException {
         ConnectionSQLServer SQL = new ConnectionSQLServer();
         myConn = SQL.connectSQL();
-        query = "SELECT * from Producto;";
+        query = "SELECT * from DetallePedido;";
         
         myStamtQ = myConn.createStatement();
         
@@ -50,19 +48,29 @@ public class modelDetallePedido {
     }
     
     /* UPDATE */
-    public void actualizarEmpleado() throws SQLException {
+    public void actualizarDetallePedido(int id, int pedido, int producto, int cantidad) throws SQLException {
         ConnectionSQLServer SQL = new ConnectionSQLServer();
         myConn = SQL.connectSQL();
-        query = "UPDATE Producto set nombre=? WHERE id=?;";
+        query = "UPDATE DetallePedido SET pedido_id = ?, producto_id = ?, cantidad = ? WHERE detalle_pedido_id = ?;";
+        
+        myStamt = myConn.prepareStatement(query);
+        myStamt.setInt(1, pedido);
+        myStamt.setInt(2, producto);
+        myStamt.setInt(3, cantidad);
+        myStamt.setInt(4, id);
+        
+        int response = myStamt.executeUpdate();
+        System.out.println(response + "filas afectadas");
         
         myConn.close();
     }
     
     /* DELETE */
-    public void eliminarEmpleado(int id) throws SQLException {
+    public void eliminarDetallePedido(int id) throws SQLException {
         ConnectionSQLServer SQL = new ConnectionSQLServer();
         myConn = SQL.connectSQL();
-        query = "DELETE FROM Producto WHERE producto_id = ?;";
+        query = "DELETE FROM DetallePedido WHERE detalle_pedido_id = ?;";
+        
         myStamt = myConn.prepareStatement(query);
         myStamt.setInt(1, id);
         

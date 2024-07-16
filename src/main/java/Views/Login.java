@@ -213,6 +213,10 @@ public class Login extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_buttonLoginActionPerformed
 
+    private void validarCredenciales() {
+        
+    }
+
     // -- Botón para la comprobación de la conexión con la base de datos --
     private void buttonDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDBActionPerformed
         ConnectionSQLServer SQL = new ConnectionSQLServer();

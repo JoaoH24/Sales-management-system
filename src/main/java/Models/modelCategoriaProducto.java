@@ -1,68 +1,89 @@
 package Models;
 
+import Components.CategoriaProducto;
 import Controllers.ConnectionSQLServer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  *
  * @author Joao
  */
 public class modelCategoriaProducto {
-    private Connection myConn = null;
-    private PreparedStatement myStamt = null;
-    private Statement myStamtQ = null;
-    public String query;
+    private static Connection myConn = null;
+    private static PreparedStatement myStamt = null;
+    private static Statement myStamtQ = null;
+    private static String query;
+    private static int response;
     
     /* INSERT */
-    public void crearCategoriaProducto(String nombre, String descripcion, float precio, int stock, int categoria) throws SQLException {
+    public static void crearCategoriaProducto(String nombre, String descripcion) throws SQLException {
         ConnectionSQLServer SQL = new ConnectionSQLServer();
         myConn = SQL.connectSQL();
-        query = "INSERT INTO Producto (nombre, descripcion, precio, stock, categoria_id) VALUES (?,?,?,?,?);";
+        query = "INSERT INTO CategoriaProducto (nombre, descripcion) VALUES (?,?);";
         
         myStamt = myConn.prepareStatement(query);
         myStamt.setString(1, nombre);
         myStamt.setString(2, descripcion);
-        myStamt.setFloat(3, precio);
-        myStamt.setInt(4, stock);
-        myStamt.setInt(5, categoria);
         
-        int response = myStamt.executeUpdate();
+        response = myStamt.executeUpdate();
         System.out.println(response + "filas afectadas");
         myConn.close();
     }
     
     /* READ */
-    public void leerCategoriaProducto() throws SQLException {
+    public static ArrayList<CategoriaProducto> leerCategoriaProducto() throws SQLException {
         ConnectionSQLServer SQL = new ConnectionSQLServer();
         myConn = SQL.connectSQL();
-        query = "SELECT * from Producto;";
+        query = "SELECT * from CategoriaProducto;";
         
         myStamtQ = myConn.createStatement();
         
         ResultSet response = myStamtQ.executeQuery(query);
         System.out.println(response);
         
+        ArrayList<CategoriaProducto> listaCategoriaProductos = new ArrayList<>();
+        System.out.println(response);
+        
+        while (response.next()) {
+            int id = response.getInt("categoria_id");
+            String nombre = response.getString("nombre");
+            String descripcion = response.getString("descripcion");
+    
+            listaCategoriaProductos.add(new CategoriaProducto(id, nombre, descripcion));
+        }
+        
         myConn.close();
+        
+        return listaCategoriaProductos;
     }
     
     /* UPDATE */
-    public void actualizarCategoriaProducto() throws SQLException {
+    public static void actualizarCategoriaProducto(int id, String nombre, String descripcion) throws SQLException {
         ConnectionSQLServer SQL = new ConnectionSQLServer();
         myConn = SQL.connectSQL();
-        query = "UPDATE Producto set nombre=? WHERE id=?;";
+        query = "UPDATE CategoriaProducto SET nombre = ?, descripcion = ? WHERE categoria_id = ?;";
+        
+        myStamt = myConn.prepareStatement(query);
+        myStamt.setString(1, nombre);
+        myStamt.setString(2, descripcion);
+        myStamt.setInt(3, id);
+        
+        response = myStamt.executeUpdate();
+        System.out.println(response + "filas afectadas");
         
         myConn.close();
     }
     
     /* DELETE */
-    public void eliminarCategoriaProducto(int id) throws SQLException {
+    public static void eliminarCategoriaProducto(int id) throws SQLException {
         ConnectionSQLServer SQL = new ConnectionSQLServer();
         myConn = SQL.connectSQL();
-        query = "DELETE FROM Producto WHERE producto_id = ?;";
+        query = "DELETE FROM CategoriaProducto WHERE categoria_id = ?;";
         myStamt = myConn.prepareStatement(query);
         myStamt.setInt(1, id);
         
