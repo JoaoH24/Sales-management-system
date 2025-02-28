@@ -2,13 +2,17 @@ package Views;
 
 import Components.CategoriaProducto;
 import Components.Cliente;
+import Components.DetallePedido;
 import Components.Empleado;
+import Components.Pedido;
 import Components.Producto;
 import Controllers.JPanelImage;
 import Controllers.Validators;
 import Models.modelCategoriaProducto;
 import Models.modelCliente;
+import Models.modelDetallePedido;
 import Models.modelEmpleado;
+import Models.modelPedido;
 import Models.modelProducto;
 import java.awt.Color;
 import java.sql.SQLException;
@@ -26,6 +30,7 @@ import javax.swing.table.DefaultTableModel;
 public class VentanaPrincipal extends javax.swing.JFrame {
 
     private Login iniLogin = new Login();
+    private int idPedido;
     DefaultTableModel mtablaClientes = new DefaultTableModel();
     DefaultTableModel mtablaCategoriaProductos = new DefaultTableModel();
     DefaultTableModel mtablaProductos = new DefaultTableModel();
@@ -46,6 +51,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         setModeloTablaCategoriaProductos();
         setModeloTablaProductos();
         setModeloTablaEmpleados();
+        setModeloTablaPedidos();
+        setModeloTablaListaProductos();
     }
 
     /**
@@ -151,11 +158,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         buttonAgregarProductoPedido = new javax.swing.JButton();
         jLabel40 = new javax.swing.JLabel();
         clientesCombo = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        buttonGenerarPedido = new javax.swing.JButton();
         buttonEliminarProductoPedido = new javax.swing.JButton();
         jPanel20 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tableListaProductos = new javax.swing.JTable();
+        jLabel35 = new javax.swing.JLabel();
+        totalLabel = new javax.swing.JLabel();
         jPanel21 = new javax.swing.JPanel();
         buttonListarPedido = new javax.swing.JButton();
         buttonEliminarPedido = new javax.swing.JButton();
@@ -1015,12 +1024,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jLabel40.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/lista.png"))); // NOI18N
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 153));
-        jButton1.setForeground(new java.awt.Color(0, 0, 0));
-        jButton1.setText("Gen Pedido");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        buttonGenerarPedido.setBackground(new java.awt.Color(255, 255, 153));
+        buttonGenerarPedido.setForeground(new java.awt.Color(0, 0, 0));
+        buttonGenerarPedido.setText("Generar Pedido");
+        buttonGenerarPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                buttonGenerarPedidoActionPerformed(evt);
             }
         });
 
@@ -1043,7 +1052,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel19Layout.createSequentialGroup()
                         .addComponent(jLabel38)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(clientesCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(clientesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buttonGenerarPedido, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
                     .addComponent(jLabel39, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel19Layout.createSequentialGroup()
                         .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1055,17 +1066,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             .addGroup(jPanel19Layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel19Layout.createSequentialGroup()
-                                        .addComponent(cantidadProductoSpin, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(30, 30, 30)
-                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(productosCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addComponent(productosCombo, 0, 225, Short.MAX_VALUE)
+                                    .addComponent(cantidadProductoSpin)))
                             .addGroup(jPanel19Layout.createSequentialGroup()
                                 .addGap(30, 30, 30)
                                 .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(buttonAgregarProductoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(buttonEliminarProductoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         jPanel19Layout.setVerticalGroup(
             jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1075,58 +1083,74 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel38)
-                    .addComponent(clientesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(clientesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonGenerarPedido))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel37)
                     .addComponent(productosCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel36)
+                    .addComponent(cantidadProductoSpin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
                 .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel36)
-                        .addComponent(cantidadProductoSpin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel19Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(buttonAgregarProductoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(buttonEliminarProductoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(12, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel19Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(buttonAgregarProductoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                        .addComponent(buttonEliminarProductoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel19Layout.createSequentialGroup()
                         .addComponent(jLabel40, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(50, 50, 50))))
         );
 
         tableListaProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Producto", "Precio unitario", "Cantidad"
+                "ID", "Producto", "Precio unitario", "Cantidad"
             }
         ));
         jScrollPane4.setViewportView(tableListaProductos);
+
+        jLabel35.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel35.setForeground(new java.awt.Color(255, 0, 51));
+        jLabel35.setText("TOTAL:");
+
+        totalLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        totalLabel.setText("0.00");
 
         javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
         jPanel20.setLayout(jPanel20Layout);
         jPanel20Layout.setHorizontalGroup(
             jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel20Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel20Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel20Layout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(jLabel35)
+                        .addGap(57, 57, 57)
+                        .addComponent(totalLabel)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel20Layout.setVerticalGroup(
             jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel20Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel35)
+                    .addComponent(totalLabel))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         buttonListarPedido.setForeground(new java.awt.Color(0, 0, 0));
@@ -1140,6 +1164,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         buttonEliminarPedido.setBackground(new java.awt.Color(255, 102, 102));
         buttonEliminarPedido.setForeground(new java.awt.Color(255, 255, 255));
         buttonEliminarPedido.setText("Eliminar Pedido");
+        buttonEliminarPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonEliminarPedidoActionPerformed(evt);
+            }
+        });
 
         jLabel41.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/lista.png"))); // NOI18N
 
@@ -1156,6 +1185,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 "ID", "Cliente", "Fecha", "Estado"
             }
         ));
+        tableListaPedidos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableListaPedidosMouseClicked(evt);
+            }
+        });
         jScrollPane7.setViewportView(tableListaPedidos);
 
         buttonConfirmarSPedido.setBackground(new java.awt.Color(51, 153, 255));
@@ -1250,7 +1284,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 620, Short.MAX_VALUE)
+            .addGap(0, 612, Short.MAX_VALUE)
             .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1663,6 +1697,18 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         mtablaEmpleados.setColumnIdentifiers(header);
         tableEmpleados.setModel(mtablaEmpleados);
     }    
+
+    private void setModeloTablaPedidos() {
+        String[] header = {"ID", "Cliente", "Fecha", "Estado"};
+        mtablalistaPedido.setColumnIdentifiers(header);
+        tableListaPedidos.setModel(mtablalistaPedido);
+    }
+
+    private void setModeloTablaListaProductos() {
+        String[] header = {"ID", "Producto", "Precio unitario", "Cantidad"};
+        mtablalistaProducto.setColumnIdentifiers(header);
+        tableListaPedidos.setModel(mtablalistaPedido);
+    }
     
     private void setComboCategoria() throws SQLException {
         categoriasProductosCombo.removeAllItems();
@@ -1820,11 +1866,65 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonListarCatergoriaActionPerformed
 
     private void buttonAgregarProductoPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAgregarProductoPedidoActionPerformed
-        // TODO add your handling code here:
+        int idProducto = productosCombo.getItemAt(productosCombo.getSelectedIndex()).getId();
+        int cantidadProducto = (int) cantidadProductoSpin.getValue();
+        
+        try {
+            float total = 0;
+            String totalCadena;
+            modelDetallePedido.crearDetallePedido(this.idPedido, idProducto, cantidadProducto);
+
+            Object[] datosListaPedido = new Object[mtablalistaProducto.getColumnCount()];
+            mtablalistaProducto.setRowCount(0);
+        
+            ArrayList<DetallePedido> listaProductos = modelDetallePedido.leerDetallePedido(this.idPedido);
+            for(DetallePedido detPed : listaProductos) {
+                
+                datosListaPedido[0] = detPed.getId();
+                datosListaPedido[1] = detPed.getNombreProducto();
+                datosListaPedido[2] = detPed.getPrecioProducto();
+                datosListaPedido[3] = detPed.getCantidadProducto();
+            
+                mtablalistaProducto.addRow(datosListaPedido);
+                
+                total += detPed.getCantidadProducto()* detPed.getPrecioProducto();
+            }
+            
+            tableListaProductos.setModel(mtablalistaProducto);
+            
+            totalCadena = String.format("%.2f", total);
+            totalLabel.setText(totalCadena);
+            productosCombo.setSelectedItem(null);
+            stockProductoSpin.setValue(0);
+        } catch (SQLException ex) {
+            // Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, 
+                    "Ocurrio un error.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_buttonAgregarProductoPedidoActionPerformed
 
     private void buttonListarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonListarPedidoActionPerformed
-        // TODO add your handling code here:
+        Object[] datosPedido = new Object[mtablalistaPedido.getColumnCount()];
+        mtablalistaPedido.setRowCount(0);
+        
+        try {
+            ArrayList<Pedido> listaPedido = modelPedido.leerPedido();
+            for(Pedido ped : listaPedido) {
+                
+                datosPedido[0] = ped.getId();
+                datosPedido[1] = ped.getNombreCliente();
+                datosPedido[2] = ped.getFechaPedido();
+                datosPedido[3] = ped.getEstado();
+            
+                mtablalistaPedido.addRow(datosPedido);
+            }
+            
+            tableListaPedidos.setModel(mtablalistaPedido);
+        } catch (SQLException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }        
     }//GEN-LAST:event_buttonListarPedidoActionPerformed
 
     private void emailEmpleadoFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailEmpleadoFActionPerformed
@@ -1848,7 +1948,16 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_usuarioEmpleadoFActionPerformed
 
     private void buttonConfirmarSPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmarSPedidoActionPerformed
-        // TODO add your handling code here:
+    int id = (int) tableListaPedidos.getValueAt(tableListaPedidos.getSelectedRow(), 0);
+        try {
+            modelPedido.actualizarPedido(id);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, 
+                    "Ocurrio un error al actualizar el estaddo del pedido.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+            
     }//GEN-LAST:event_buttonConfirmarSPedidoActionPerformed
 
     private void buttonAgregarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAgregarEmpleadoActionPerformed
@@ -1911,20 +2020,43 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             direccionClienteF.setText("");
 
         } catch (SQLException ex) {
-            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Error al crear cliente", "Error", JOptionPane.ERROR_MESSAGE);
+            //Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_buttonAgregarClienteActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void buttonGenerarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGenerarPedidoActionPerformed
+        try {
+            Login userCred = new Login();
+            String userApp = userCred.retornarUsuario();
+            int idEmpleado = modelEmpleado.leerIDEmpleado(userApp);
+            int idCliente = clientesCombo.getItemAt(clientesCombo.getSelectedIndex()).getId();
+            modelPedido.crearPedido(idCliente, idEmpleado);
+            
+            System.out.println("id empleado:" + idEmpleado + " id cliente:" + idCliente);
+            
+        } catch (SQLException ex) {
+            //Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Error al generar un pedido", "Error", JOptionPane.ERROR_MESSAGE);
+        }      
+    }//GEN-LAST:event_buttonGenerarPedidoActionPerformed
 
     private void buttonEliminarProductoPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEliminarProductoPedidoActionPerformed
-        // TODO add your handling code here:
+        int id = (int) tableListaProductos.getValueAt(tableListaProductos.getSelectedRow(), 0);
+        
+        try {
+            modelDetallePedido.eliminarDetallePedido(id);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, 
+                    "Ocurrio un error al eliminar el pedido de la lista", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);            
+        }
     }//GEN-LAST:event_buttonEliminarProductoPedidoActionPerformed
 
     private void buttonEliminarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEliminarClienteActionPerformed
         int id = (int) tableClientes.getValueAt(tableClientes.getSelectedRow(), 0);
+        
         try {
             modelCliente.eliminarCliente(id);
         } catch (SQLException ex) {
@@ -2095,6 +2227,57 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_buttonActualizarEmpleadoActionPerformed
 
+    private void buttonEliminarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEliminarPedidoActionPerformed
+        int id = (int) tableListaPedidos.getValueAt(tableListaPedidos.getSelectedRow(), 0);
+        try {
+            modelPedido.eliminarPedido(id);
+        } catch (SQLException ex) {
+            //Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, 
+                    "Ocurrio un error al eliminar el pedido. Verifique que no tenga productos en la lista y el estado del pedido", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_buttonEliminarPedidoActionPerformed
+
+    private void tableListaPedidosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListaPedidosMouseClicked
+        try {
+            int rowSelected = tableListaPedidos.rowAtPoint(evt.getPoint());
+            this.idPedido = (int) tableListaPedidos.getValueAt(rowSelected, 0);
+            
+            double total = 0;
+            String totalCadena;
+            
+            Object[] datosListaPedido = new Object[mtablalistaProducto.getColumnCount()];
+            mtablalistaProducto.setRowCount(0);
+            
+            ArrayList<DetallePedido> listaProductos = modelDetallePedido.leerDetallePedido(this.idPedido);
+            for(DetallePedido detPed : listaProductos) {
+                
+                datosListaPedido[0] = detPed.getId();
+                datosListaPedido[1] = detPed.getNombreProducto();
+                datosListaPedido[2] = detPed.getPrecioProducto();
+                datosListaPedido[3] = detPed.getCantidadProducto();
+            
+                total += detPed.getCantidadProducto()* detPed.getPrecioProducto();
+                
+                mtablalistaProducto.addRow(datosListaPedido);
+            
+                totalCadena = String.format("%.2f", total);
+                totalLabel.setText(totalCadena);
+                productosCombo.setSelectedItem(null);
+                stockProductoSpin.setValue(0);
+            }
+            
+            tableListaProductos.setModel(mtablalistaProducto);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, 
+                    "Ocurrio un error.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_tableListaPedidosMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -2119,6 +2302,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton buttonEliminarPedido;
     private javax.swing.JButton buttonEliminarProducto;
     private javax.swing.JButton buttonEliminarProductoPedido;
+    private javax.swing.JButton buttonGenerarPedido;
     private javax.swing.JButton buttonListarCatergoria;
     private javax.swing.JButton buttonListarCliente;
     private javax.swing.JButton buttonListarPedido;
@@ -2135,7 +2319,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField direccionEmpleadoF;
     private javax.swing.JTextField emailClienteF;
     private javax.swing.JTextField emailEmpleadoF;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -2163,6 +2346,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel38;
@@ -2242,6 +2426,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTable tableProductos;
     private javax.swing.JTextField telefonoClienteF;
     private javax.swing.JTextField telefonoEmpleadoF;
+    private javax.swing.JLabel totalLabel;
     private static javax.swing.JPanel userImage;
     private javax.swing.JTextField usuarioEmpleadoF;
     // End of variables declaration//GEN-END:variables

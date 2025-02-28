@@ -2,10 +2,19 @@ package Views;
 
 import Controllers.ConnectionSQLServer;
 import Controllers.JPanelImage;
+import Models.modelEmpleado;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.IntelliJTheme;
+import com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme;
 import java.awt.Color;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 /**
  *
@@ -13,7 +22,8 @@ import javax.swing.JOptionPane;
  */
 public class Login extends javax.swing.JFrame {
 
-    
+    public static String usernameApp;
+    public String passwordApp;
     
     public Login() {
         initComponents();
@@ -51,9 +61,6 @@ public class Login extends javax.swing.JFrame {
 
         jLabel3.setText("Contraseña");
 
-        password.setText("admin");
-
-        username.setText("admin");
         username.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 usernameActionPerformed(evt);
@@ -207,14 +214,35 @@ public class Login extends javax.swing.JFrame {
 
     
     private void buttonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLoginActionPerformed
-        VentanaPrincipal mainWindow = new VentanaPrincipal();
-        mainWindow.setLoginWindow(this);
-        mainWindow.setVisible(true);
-        this.setVisible(false);
+        try {
+            validarCredenciales();
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, 
+                    "Error al comprobar sus credenciales de acceso. Verifique la conexión con la Base de datos.", "Error inicio de sesión", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_buttonLoginActionPerformed
 
-    private void validarCredenciales() {
+    private void validarCredenciales() throws SQLException {
+        usernameApp = username.getText();
+        passwordApp = password.getText();
         
+        if (modelEmpleado.validarEmpleado(usernameApp, passwordApp) == 1) {
+            VentanaPrincipal mainWindow = new VentanaPrincipal();
+            mainWindow.setLoginWindow(this);
+            mainWindow.setVisible(true);
+            this.setVisible(false);
+        }
+        else {
+            JOptionPane.showMessageDialog(this, 
+                    "Credenciales de sesión invalidas. Verifique sus datos de inicio de sesión o comuniquese con el administrador del sistema", "Error inicio de sesión", 
+                    JOptionPane.ERROR_MESSAGE);
+        }        
+    }
+    
+    public static String retornarUsuario() {
+        return Login.usernameApp;
     }
 
     // -- Botón para la comprobación de la conexión con la base de datos --
@@ -240,7 +268,7 @@ public class Login extends javax.swing.JFrame {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+        
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -258,7 +286,12 @@ public class Login extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        */
+        try {
+            UIManager.setLookAndFeel(new FlatArcOrangeIJTheme());
+        } catch( Exception ex ) {
+            System.err.println( "Failed to initialize LaF" );
+        }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

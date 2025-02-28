@@ -17,6 +17,18 @@
             <artifactId>mssql-jdbc</artifactId>
             <version>12.7.0.jre11-preview</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.5.4</version>
+        </dependency>
+        
+        <dependency>
+          <groupId>com.formdev</groupId>
+          <artifactId>flatlaf-intellij-themes</artifactId>
+          <version>3.5.4</version>
+        </dependency>
     </dependencies>
     <build>
     <resources>

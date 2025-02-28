@@ -110,5 +110,45 @@ public class modelEmpleado {
         System.out.println(response + "filas afectadas");
         
         myConn.close();
-    }   
+    }
+    
+    /* VALIDAR EMPLEADO */
+    public static int validarEmpleado(String username, String password) throws SQLException {
+        ConnectionSQLServer SQL = new ConnectionSQLServer();
+        myConn = SQL.connectSQL();
+        query = "SELECT username, password from Empleado WHERE username = ? and password = ?;";
+        
+        myStamt = myConn.prepareStatement(query);
+        myStamt.setString(1, username);
+        myStamt.setString(2, password);
+        
+        ResultSet response = myStamt.executeQuery();
+        
+        int count = 0;
+        while (response.next()) {
+            count++;
+        }
+        return count;
+    }
+    
+    /* RETORNAR ID */
+    public static int leerIDEmpleado(String username) throws SQLException {
+        ConnectionSQLServer SQL = new ConnectionSQLServer();
+        myConn = SQL.connectSQL();
+        query = "SELECT empleado_id from Empleado WHERE username = ?;";
+        
+        myStamt = myConn.prepareStatement(query);
+        myStamt.setString(1, username);
+        
+        ResultSet response = myStamt.executeQuery();
+        int id = 0;
+        
+        while (response.next()) {
+            id = response.getInt("empleado_id");
+        }
+        myConn.close();
+
+        return id;
+        
+    }
 }
